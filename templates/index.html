@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 {% block content %} 
 <h1> Accueil </h1>
-<p>Bienvenue sur mon site !</p>
+{% if session['nom_utilisateur']: %}
+<p>Bonjour {{ session["nom_utilisateur"] | title }}, bienvenue sur mon site</p>
+{% else: %}
+<p>~Bonjour invité, bienvenue sur mon site !</p>
+{% endif %}
+
+<p>Bonjour {{ session["nom_utilisateur"] | title if session["nom_utilisateur"] else 'invité' }}, bienvenue sur mon site
+</p
 {% endblock %}
