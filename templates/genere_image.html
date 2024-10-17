@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jeu.css')}}">
+{% endblock %}
+
+{% block content %}
+
+<div id="jeu">
+    <h1>Génère une image grace à l'IA </h1>
+    <form>
+        <p>
+            <label for="prompt"> Veuillers saisie : </label><br>
+            <textarea name="prompt" id="prompt"></textarea>
+        </p>
+        <P>
+            <input type="submit" value="Valider">
+        </P>
+    </form>
+</div>
+<div id="image_container">
+
+</div>
+{% endblock %}

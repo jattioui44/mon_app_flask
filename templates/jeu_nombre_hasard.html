@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jeu.css')}}">
+{% endblock%}
+{% block content %}
+<div id="jeu">
+    <h1>Jeu de nombre mystère </h1>
+    {% if session['en_cours']: %}
+    <p>J'ai choisi un nombre entre 1 et 100.</p>
+    <form action={{ url_for("jeu")}} method="post">
+        <p>
+            <label for="nombre">Donner le nombre :</label>
+            <input type="number" name="nombre" id="nombre" required autofocus>
+        </p>
+        <p>
+            <input class="btn" type="submit" value="Valider">
+        </p>
+    </form>
+    <hr>
+    {% if message %}
+    {{message}}
+    {% endif %}
+    <p>Il reste {{ session['nb_essaie']}} tentative(s) ! </p>
+    <p>
+        <a href="{{ url_for('jeu') }}">Recomencer</a>
+    </p>
+    {% if session['essais'] != [] %}
+    <table>
+        <tr>
+            <th> Tentative </th>
+            <th> Résultat </th>
+        </tr>
+        {% for essai in session['essais'] %}
+        <tr>
+            <td> {{ essai }}</td>
+            <td> {{ "C'est plus" if session['nb'] > essai else "c'est moin" }} </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    {% else: %}
+    {% if message %}
+    {{message}}
+    {% if session['nb_essaie'] > 0 %}
+    <p>le nombre mystère était bien {{ session['nb']}} ! </p>
+    <p>vous avez trouver dans {{ 10 - session['nb_essaie'] }} tentative(s)..</p>
+    {% else %}
+    <p>le nombre mystère était {{ session['nb']}} ! </p>
+    {% endif %}
+    {% endif %}
+    <p>
+        <a href="{{ url_for('jeu') }}">Rejouer</a>
+    </p>
+    {% endif %}
+</div>
+{% endblock %}

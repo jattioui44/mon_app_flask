@@ -1,4 +1,5 @@
 from flask import Flask , render_template , request ,redirect , url_for ,session 
+from random import randint
 import datetime
 app = Flask(__name__)
 app.secret_key = "940bdc12afa81f9b0bb407b1640bb843fe51c398be2e281d3088f7125baf66a5"
@@ -99,5 +100,36 @@ def compteur():
         session["compteur"] = session["compteur"] + 1
     nb_visite = session["compteur"]
     return f"vous avez visité cette page {nb_visite} fois. "
+@app.route("/logout")
+def logout():
+    session.pop('nom_utilisateur',None)
+    return redirect(url_for("login"))
+@app.route('/jeu',methods=["POST","GET"])
+def jeu():
+    if request.method == "POST":
+        reponse = int(request.form.get('nombre'))
+        session['essais'].append(reponse)
+        if reponse == session['nb']:
+            session['en_cours'] = False
+            message = "Bravo, vous avez gagné !"
+        elif reponse < session['nb']:
+            message = "Non, C'est plus !"
+        else:
+            message = "Non, C'est moin !"
+        session['nb_essaie'] = session['nb_essaie'] - 1
+        if session['nb_essaie'] == 0 :
+            session['en_cours'] = False
+            message = "C'est perdu !"
+        return render_template('jeu_nombre_hasard.html',message=message)
+    else:
+        nb_hasard = randint(1,100)
+        session['nb'] = nb_hasard
+        session['en_cours'] = True
+        session['nb_essaie'] = 10
+        session['essais'] = []
+        return render_template("jeu_nombre_hasard.html")
+@app.route('/genere')
+def genere():
+    return render_template('genere_image.html')
 if __name__=='__main__':
     app.run(debug=True)
